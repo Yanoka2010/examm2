@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Удаление книги{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">
+                    <i class="bi bi-exclamation-triangle"></i> Подтверждение удаления
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="mb-4">
+                    Вы действительно хотите удалить книгу <strong>«{{ product.name }}»</strong>?
+                </p>
+
+                <div class="alert alert-warning">
+                    <i class="bi bi-info-circle"></i>
+                    Это действие нельзя будет отменить: запись будет удалена из каталога.
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Удалить
+                        </button>
+                    </form>
+                    <a href="{% url 'products:product_list' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Отмена
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

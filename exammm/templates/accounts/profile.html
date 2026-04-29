@@ -1,0 +1,103 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="bi bi-person-circle"></i> Профиль пользователя
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="bi bi-person-fill text-primary" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h5 class="card-title">{{ user.get_full_name|default:user.username }}</h5>
+                        <p class="text-muted">@{{ user.username }}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="mb-3">
+                    <h6><i class="bi bi-info-circle"></i> Личная информация</h6>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <strong>Имя:</strong><br>
+                            {{ user.first_name|default:'Не указано' }}
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Фамилия:</strong><br>
+                            {{ user.last_name|default:'Не указано' }}
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-6">
+                            <strong>Email:</strong><br>
+                            {{ user.email|default:'Не указано' }}
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Дата регистрации:</strong><br>
+                            {{ user.date_joined|date:"d.m.Y" }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <h6><i class="bi bi-shield-check"></i> Роль в системе</h6>
+                    {% if user.is_superuser %}
+                        <span class="badge bg-danger">Администратор</span>
+                    {% elif user.groups.all %}
+                        {% for group in user.groups.all %}
+                            {% if group.name == 'Менеджеры' %}
+                                <span class="badge bg-warning text-dark">Менеджер</span>
+                            {% elif group.name == 'Клиенты' %}
+                                <span class="badge bg-info">Клиент</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ group.name }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <span class="badge bg-light text-dark">Пользователь</span>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <h6><i class="bi bi-clock"></i> Активность</h6>
+                    <p class="mb-1">
+                        <strong>Последний вход:</strong>
+                        {% if user.last_login %}
+                            {{ user.last_login|date:"d.m.Y H:i" }}
+                        {% else %}
+                            Никогда
+                        {% endif %}
+                    </p>
+                    <p class="mb-0">
+                        <strong>Статус:</strong>
+                        {% if user.is_active %}
+                            <span class="text-success">Активен</span>
+                        {% else %}
+                            <span class="text-danger">Заблокирован</span>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <hr>
+
+                <div class="d-flex gap-2">
+                    <a href="{% url 'products:product_list' %}" class="btn btn-primary">
+                        <i class="bi bi-arrow-left"></i> Вернуться к каталогу
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
